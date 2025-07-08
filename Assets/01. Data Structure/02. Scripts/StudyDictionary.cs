@@ -1,11 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StudyDictionary : MonoBehaviour
-{
-    public Dictionary<string, int> persons = new Dictionary<string, int>();
+public class PersonData {
+    public int age;
+    public string name;
+    public float height;
+    public float weight;
+
+    public PersonData(int age, string name, float height, float weight) {
+        this.age = age;
+        this.name = name;
+        this.height = height;
+        this.weight = weight;
+    }
+}
+
+public class StudyDictionary : MonoBehaviour {
+    public Dictionary<string, PersonData> persons = new Dictionary<string, PersonData>();
 
     private void Start() {
+        persons.Add("Ã¶¼ö", new PersonData(10, "Ã¶¼ö", 150f, 30f));
+        persons.Add("¿µÈñ", new PersonData(20, "¿µÈñ", 150f, 30f));
+        persons.Add("µ¿¼ö", new PersonData(30, "µ¿¼ö", 150f, 30f));
+
+        Debug.Log(persons["Ã¶¼ö"].age);
+
+        /*
         persons.Add("Ã¶¼ö", 10);
         persons.Add("¿µÈñ", 10);
         persons.Add("µ¿¼ö", 10);
@@ -28,5 +48,6 @@ public class StudyDictionary : MonoBehaviour
         if (persons.ContainsValue(17)) {
             Debug.Log("17»ìÀÎ »ç¶÷ÀÌ ÀÖ´Ù.");
         }
+        */
     }
 }
