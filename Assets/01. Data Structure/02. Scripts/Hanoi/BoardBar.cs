@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardBar : MonoBehaviour
-{
+public class BoardBar : MonoBehaviour {
     public enum BarType { Left, Center, Right }
     public BarType barType;
 
@@ -11,6 +10,7 @@ public class BoardBar : MonoBehaviour
     private void OnMouseDown() {
         if (!HanoiTower.isSelected) { // 선택이 안된 상태
             HanoiTower.isSelected = true;
+            HanoiTower.currBar = this;
             HanoiTower.selectedDonut = PopDonut();
         }
         else { // 선택된 상태
@@ -23,6 +23,8 @@ public class BoardBar : MonoBehaviour
 
         HanoiTower.isSelected = false;
         HanoiTower.selectedDonut = null;
+        HanoiTower.moveCount++;
+
 
         donut.transform.position = transform.position + Vector3.up * .5f;
         donut.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
@@ -32,12 +34,15 @@ public class BoardBar : MonoBehaviour
     }
 
     public GameObject PopDonut() {
-        GameObject donut = barStack.Pop(); // Stack에서 GameObject를 꺼내는 기능
-        return donut; // 꺼낸 도넛을 반환
+        if (barStack.Count > 0) {
+            GameObject donut = barStack.Pop(); // Stack에서 GameObject를 꺼내는 기능
+            return donut; // 꺼낸 도넛을 반환
+        }
+        return null;
     }
 
     private bool CheckDonut(GameObject dount) {
-        if(barStack.Count > 0) {
+        if (barStack.Count > 0) {
             int pushNumber = dount.GetComponent<Donut>().DonutNumber;
 
             GameObject peekDonut = barStack.Peek();
