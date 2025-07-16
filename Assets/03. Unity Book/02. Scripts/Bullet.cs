@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    public GameObject bulletFactory;
-    public GameObject firePos;
     public float speed = 5;
 
     private void Update() {
