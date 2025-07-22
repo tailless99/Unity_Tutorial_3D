@@ -12,6 +12,8 @@ public class FPSGameManager : Singleton<FPSGameManager>
     TextMeshProUGUI gameText;
 
     private FPSPlayerMove player;
+    private Animator animator;
+
 
     private void Start() {
         gState = GameState.Ready;
@@ -22,6 +24,8 @@ public class FPSGameManager : Singleton<FPSGameManager>
 
         player = GameObject.Find("Player").GetComponent<FPSPlayerMove>();
         StartCoroutine(ReadyToStart());
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     IEnumerator ReadyToStart() {
@@ -34,6 +38,8 @@ public class FPSGameManager : Singleton<FPSGameManager>
 
     private void Update() {
         if(player.hp <= 0) {
+            animator.GetComponentInChildren<Animator>().SetFloat("MoveMotion", 0f);
+
             gameLabel.SetActive(true);
             gameText.text = "Game Over!";
             gameText.color = new Color(255,0,0,255);

@@ -13,6 +13,7 @@ public class FPSPlayerMove : MonoBehaviour {
     public bool isJumping = false;
 
     private CharacterController cc;
+    [SerializeField]private Animator animator;
     
     private float gravity = -20f;
     private float yVelocity = 0f;
@@ -20,16 +21,19 @@ public class FPSPlayerMove : MonoBehaviour {
 
     void Start() {
         cc = GetComponent<CharacterController>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update() {
         if (FPSGameManager.Instance.gState != FPSGameManager.GameState.Run) return;
 
-        float h = Input.GetAxis("Horizontal");
-        float v = Input.GetAxis("Vertical");
+        float h = Input.GetAxisRaw("Horizontal");
+        float v = Input.GetAxisRaw("Vertical");
 
         Vector3 dir = new Vector3(h, 0, v); // 크기와 방향이 있는 벡터
         dir = dir.normalized; // 방향만 있는 벡터
+
+        animator.SetFloat("MoveMotion", dir.magnitude);
 
         // 카메라의 Transform 기준으로 변환
         dir = Camera.main.transform.TransformDirection(dir);
