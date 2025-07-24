@@ -1,5 +1,7 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class EnemyFSM : MonoBehaviour {
@@ -17,6 +19,7 @@ public class EnemyFSM : MonoBehaviour {
     private CharacterController cc;
     private Transform player;
     private Animator animator;
+    private NavMeshAgent smith;
 
     private float currentCoolTime = 0f;
     private float attackDelay = 2f;
@@ -28,10 +31,13 @@ public class EnemyFSM : MonoBehaviour {
     private void Start() {
         m_State = EnemyState.Idle;
         player = GameObject.Find("Player").transform;
+        
+        animator = transform.GetComponentInChildren<Animator>();
         cc = GetComponent<CharacterController>();
+        smith = GetComponent<NavMeshAgent>();
+
         originPos = transform.position;
         originRot = transform.rotation;
-        animator = transform.GetComponentInChildren<Animator>();
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -77,9 +83,15 @@ public class EnemyFSM : MonoBehaviour {
         // 추적 이동
         // 타겟이 공격 가능 거리보다 먼 경우 -> 이동
         else if (Vector3.Distance(transform.position, player.position) > attackDistance) {
-            Vector3 dir = (player.position - transform.position).normalized;
-            cc.Move(dir * moveSpeed * Time.deltaTime);
-            transform.forward = dir;
+            //Vector3 dir = (player.position - transform.position).normalized;
+            //cc.Move(dir * moveSpeed * Time.deltaTime);
+            //transform.forward = dir;
+
+            smith.isStopped = true;
+            smith.ResetPath();
+
+            smith.stoppingDistance = attackDistance;
+            smith.SetDestination(player.position);
         }
         // 타겟이 공격 가능 거리보다 가까운 경우 -> 공격으로 상태 전환
         else {
@@ -114,11 +126,13 @@ public class EnemyFSM : MonoBehaviour {
     private void Return() {
         // 원래 있던 곳으로 복귀
         if(Vector3.Distance(transform.position, originPos) > .1f){
-            Vector3 dir = (originPos - transform.position).normalized;
-            cc.Move(dir * moveSpeed * Time.deltaTime);
-            transform.forward = dir;
+            smith.SetDestination(originPos);
+            smith.stoppingDistance = 0f;
         }
         else {
+            smith.isStopped = true;
+            smith.ResetPath();
+
             transform.position = originPos;
             transform.rotation = originRot;
             hp = 15;
@@ -132,7 +146,10 @@ public class EnemyFSM : MonoBehaviour {
         if (m_State == EnemyState.Damaged || m_State == EnemyState.Die || m_State == EnemyState.Return) return;
         hp -= hitPower;
 
-        if(hp > 0) {
+        smith.isStopped = true;
+        smith.ResetPath();
+
+        if (hp > 0) {
             animator.SetTrigger("Damaged");
             m_State = EnemyState.Damaged;
             Damaged();

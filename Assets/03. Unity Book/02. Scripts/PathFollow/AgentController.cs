@@ -1,32 +1,22 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class AgentController : MonoBehaviour
-{
-    public Transform player;
-    private NavMeshAgent agent; // 네브메시 에이전트
-
+public class AgentController : MonoBehaviour {
+    private NavMeshAgent agent;
     public Transform[] points;
-    public int index;
+    private int index;
 
-    private void Start() {
-        //player = GameObject.Find("Player").transform;
+    void Start() {
         agent = GetComponent<NavMeshAgent>();
-        SetRandomPoint();
+        agent.SetDestination(points[index].position);
     }
 
-    private void Update() {
-        //agent.SetDestination(points[index].transform.position);
-        if (agent.remainingDistance <= 1.5f) {
-            Debug.Log("목적지 변경");
-            SetRandomPoint();
+    void Update() {
+        if (Vector3.Distance(transform.position, points[index].position) < 3.5f) {
+            index++;
+            if (index >= points.Length)
+                index = 0;
+            agent.SetDestination(points[index].position);
         }
-    }
-
-    private void SetRandomPoint() {
-        int temp = index;
-        while(temp == index)
-            index = Random.Range(0, points.Length);
-        agent.SetDestination(points[index].transform.position);
     }
 }
