@@ -39,8 +39,8 @@ public class EnemyFSM : MonoBehaviour {
         originPos = transform.position;
         originRot = transform.rotation;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update() {
