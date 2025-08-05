@@ -9,6 +9,9 @@ public class StudyDelegate : MonoBehaviour {
     public MyDelegate myDelegate;
     public MyDelegate onkeyDown;
 
+    public delegate void TimerStart();
+    public event TimerStart onTimerStart;
+
     public KeyCode keycode = KeyCode.Space;
     private float timer;
     private bool isTimer;
