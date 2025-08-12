@@ -4,7 +4,6 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - FxTemporaire
   - Obstacle
   layers:
   - Default
@@ -24,7 +23,7 @@ TagManager:
   - 
   - Obstacles
   - 
-  - 
+  - Field
   - 
   - 
   - 
