@@ -9,28 +9,34 @@ public class Fade : MonoBehaviour
 
     public static Action<float, Color, bool, Action> onFadeAction;
 
-    void Awake() {
+    void Awake()
+    {
         fadeImage = GetComponent<Image>();
     }
 
-    void OnEnable() {
+    void OnEnable()
+    {
         onFadeAction += OnFade;
     }
 
-    void OnDisable() {
+    void OnDisable()
+    {
         onFadeAction -= OnFade;
     }
 
-    private void OnFade(float t, Color c, bool isFade, Action fadeEvent = null) {
+    private void OnFade(float t, Color c, bool isFade, Action fadeEvent = null)
+    {
         StartCoroutine(FadeRoutine(t, c, isFade, fadeEvent));
     }
 
-    IEnumerator FadeRoutine(float fadeTime, Color color, bool isFade, Action fadeEvent = null) {
+    IEnumerator FadeRoutine(float fadeTime, Color color, bool isFade, Action fadeEvent = null)
+    {
         fadeImage.raycastTarget = true;
 
         float timer = 0f;
         float percent = 0f;
-        while (percent < 1f) {
+        while (percent < 1f)
+        {
             timer += Time.deltaTime;
             percent = timer / fadeTime;
 

@@ -2,67 +2,86 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SelectCharacter : MonoBehaviour {
+public class SelectCharacter : MonoBehaviour
+{
     [SerializeField] private Transform centerPivot;
 
     [SerializeField] private Animator[] characterAnims;
-
-    [SerializeField] Button[] turnButtons;
-    [SerializeField] Button selectButton;
-
+    
+    [SerializeField] private Button[] turnButtons; // 0 : Left / 1 : Right
+    [SerializeField] private Button selectButton;
+    
     private int currentIndex;
+
     private bool isTurn;
 
-    private void Start() {
+    void Start()
+    {
         turnButtons[0].onClick.AddListener(() => Turn(true));
         turnButtons[1].onClick.AddListener(() => Turn(false));
 
-        selectButton.onClick.AddListener(() => Select());
+        selectButton.onClick.AddListener(Select);
     }
 
-    public void Turn(bool isLeft) {
-        if (!isTurn) {
-            var value = isLeft ? -1 : 1;
+    private void Turn(bool isLeft)
+    {
+        if (!isTurn)
+        {
+            isTurn = true;
+            
+            int value = isLeft ? -1 : 1;
             currentIndex += value;
 
+            // ìºë¦­í„°ê°€ 4ê°œì´ê¸° ë•Œë¬¸ì— 0 ~ 3ê¹Œì§€ ë²”ìœ„ë¡œ ì„¤ì •
             if (currentIndex < 0) currentIndex = 3;
             else if (currentIndex > 3) currentIndex = 0;
 
-            var turnValue = value * 90;
+            float turnValue = value * 90;
             var targetRot = centerPivot.rotation * Quaternion.Euler(0, turnValue, 0);
 
-            isTurn = true;
             StartCoroutine(TurnRoutine(targetRot));
         }
     }
 
-    IEnumerator TurnRoutine(Quaternion targetRot) {
-        while (true) {
-            yield return null; // while true¹® »ç¿ë½Ã ¹«Á¶°Ç ¾È¿¡ yield retrunÀÌ ÇÊ¿äÇÔ
+    IEnumerator TurnRoutine(Quaternion targetRot)
+    {
+        while (true)
+        {
+            yield return null; // while trueë¬¸ ì‚¬ìš©ì‹œ ë¬´ì¡°ê±´ ì•ˆì— yield returnì´ í•„ìš”
 
+            // ë¶€ë“œëŸ½ê²Œ íšŒì „
             centerPivot.rotation = Quaternion.Slerp(centerPivot.rotation, targetRot, 10f * Time.deltaTime);
 
-            Debug.Log("Turn");
-
             var angle = Quaternion.Angle(centerPivot.rotation, targetRot);
-            if (angle <= 0.1f) {
+            if (angle <= 0.1f)
+            {
                 isTurn = false;
                 centerPivot.rotation = targetRot;
+                Debug.Log("Completed Turn");
+
                 yield break;
             }
         }
     }
 
-    public void Select() {
-        Debug.Log($"ÇöÀç ¼±ÅÃÇÑ Ä³¸¯ÅÍ´Â {currentIndex}¹øÂ° Ä³¸¯ÅÍÀÔ´Ï´Ù.");
-        StartCoroutine(TurnRoutine());
+    private void Select()
+    {
+        Debug.Log($"í˜„ì¬ ì„ íƒí•œ ìºë¦­í„°ëŠ” {currentIndex}ë²ˆì§¸ ìºë¦­í„°ì…ë‹ˆë‹¤.");
+        
+        StartCoroutine(SelectRoutine());
     }
 
-    IEnumerator TurnRoutine() {
-        characterAnims[currentIndex].SetTrigger("Selected");
-        
+    IEnumerator SelectRoutine()
+    {
+        characterAnims[currentIndex].SetTrigger("Select");
+
         yield return new WaitForSeconds(3f);
+
         Fade.onFadeAction?.Invoke(3f, Color.white, true, null);
+        
         yield return new WaitForSeconds(3.5f);
+        
+        // Load Scene
     }
+
 }
