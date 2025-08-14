@@ -22,9 +22,12 @@ namespace Farm
         private const float GRAVITY = -9.8f;
 
 
-        void Start()
-        {
-            anim = GetComponent<Animator>();
+        private void Awake() {
+            int characterIndex = LoadSceneManager.Instance.GetCharacterIndex();
+        
+            anim = transform.GetChild(characterIndex).GetComponent<Animator>();
+            transform.GetChild(characterIndex).gameObject.SetActive(true);
+            
             cc = GetComponent<CharacterController>();
         }
 

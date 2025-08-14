@@ -10,6 +10,10 @@ public class Crop : MonoBehaviour {
         useAction += Use;
     }
 
+    private void OnDisable() {
+        useAction = null;
+    }
+
     private void OnTriggerEnter(Collider other) {
         if (other.GetComponent<Collider>().CompareTag("Player")) {
             Get(); // È¹µæ ·ÎÁ÷

@@ -18,7 +18,6 @@ public class WeatherSystem : MonoBehaviour
             yield return new WaitForSeconds(15f);
 
             int weatherCount = Enum.GetValues(typeof(WeatherType)).Length;
-            Debug.Log(weatherCount);
 
             int ranIndex = Random.Range(0, weatherCount);
             weatherType = (WeatherType)ranIndex;
